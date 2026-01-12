@@ -15,13 +15,13 @@ int option;
 string todo_item;
 string items;//to store lines
 string line;//for new lines
-//functions
 
+
+//functions
 void dis_options(){
     cout<<"choose option"<<endl;
     cout<<""<<endl;
-    cout<<"1.read\n2.add\n3.delete\n4.edit\n";
-    cout <<"3> to quit" << endl;
+    cout<<"1.read\n2.add\n3.delete\n4.edit\n5.clear\n6.exit";
 }
 
 //basic information stream to connect txt to program
@@ -45,8 +45,12 @@ vector <string> get_todos(const string & filename) {
 }
 
 void read_file(vector <string>& todo_items) {
+    //should i read from file or vector
+    int line_num = 1;
+
     for (string item : todo_items) {
-        cout << item << endl;
+        ++line_num;
+        cout << line_num << ". " << item << endl;
     }
 
 }
@@ -85,6 +89,14 @@ void del_item(vector <string>& todo_items,string & filename) {
 
 }
 
+void clear_todos(vector <string> & todo_items,string & filename) {
+    todo_items.erase(todo_items.begin(), todo_items.end());
+    ofstream outfile(filename);
+    for (string item : todo_items) {
+        outfile << item;
+    }
+}
+
 void edit_line(vector <string> & todo_items,string filename ) {
     cout << "which line would you like to edit" << endl;
     int edit_line;
@@ -109,10 +121,6 @@ int main(){
     time_t timestamp;
     time(&timestamp);
 
-
-    ifstream read_list("todo_list.txt");//init the object
-
-    
     vector <string> todo_things = get_todos("todo_list.txt");
 
     while(running){
@@ -122,15 +130,6 @@ int main(){
 
         // clear leftover newline or the stream i think
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-        /*
-        to check amount of lines
-        while (getline(read_list, items)){
-            ++num_lines;
-        }
-        */
-
-        //this needs to stay here to access information 
 
         switch(option)
         {
@@ -158,17 +157,16 @@ int main(){
                 }
 
                 case 5:{
-                    running = false;//terminate application
+                    clear_todos(todo_things,filename);
                     break;
                 }
                 case 6:{
-                    //clear txt file
-                    return 1;
+                    running = false;//terminate application
                     break;
                 }
                     
                 default:{
-                    cout<<"choose 1-5";
+                    cout<<"choose valid option: 1-6";
                     break;
                 }
             
@@ -181,8 +179,6 @@ int main(){
 //format the time
 //remove words in console
 //removing lines
-//editing like the items
-//something like a clear function
 //time of addition of item maybe expected time to finish but that dont align with your values
 
 
