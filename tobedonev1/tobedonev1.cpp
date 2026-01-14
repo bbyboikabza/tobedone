@@ -46,24 +46,21 @@ vector <string> get_todos(const string & filename) {
 
 void read_file(vector <string>& todo_items) {
     //should i read from file or vector
-    int line_num = 1;
+    int line_num = 0;
 
     for (string item : todo_items) {
         ++line_num;
-        cout << line_num << ". " << item << endl;
+        cout << line_num << ". " << item << "\n";
     }
 
 }
 
-void write_to_file(vector <string>& todo_items, string& filename) {
+void write_to_file(string& filename,vector <string>& todo_items) {
 
     ofstream out_file(filename);
     if (!out_file) {
         cerr << "cant write to file";
     }
-    string line;
-    getline(cin, line);
-    todo_items.push_back(line);
 
     //the stored todo_items all write at once to file 
     for (string item : todo_items) {
@@ -71,7 +68,16 @@ void write_to_file(vector <string>& todo_items, string& filename) {
     }
 }
 
-void del_item(vector <string>& todo_items,string & filename) {
+void add_item(string& filename,vector <string>& todo_items) {
+    string line;
+    getline(cin, line);
+
+    todo_items.push_back(line);
+    write_to_file(filename,todo_items);
+}
+
+void del_item(vector <string>& todo_items,string& filename) {
+
     
     int del_line;
     cout << "which line would u like to delete: ";
@@ -81,20 +87,13 @@ void del_item(vector <string>& todo_items,string & filename) {
 
     todo_items.erase(del_item);
 
-    ofstream out_file(filename);
-    
-    for (string item : todo_items) {
-        out_file << item << "\n";
-    }
+    write_to_file(filename, todo_items);
 
 }
 
 void clear_todos(vector <string> & todo_items,string & filename) {
     todo_items.erase(todo_items.begin(), todo_items.end());
-    ofstream outfile(filename);
-    for (string item : todo_items) {
-        outfile << item;
-    }
+    write_to_file(filename, todo_items);
 }
 
 void edit_line(vector <string> & todo_items,string filename ) {
@@ -108,11 +107,8 @@ void edit_line(vector <string> & todo_items,string filename ) {
     getline(cin, replace_line);
 
     todo_items.at(edit_line-1) = replace_line;
-    ofstream out_file(filename);
+    write_to_file(filename, todo_items);
 
-    for (string item : todo_items) {
-        out_file << item;
-    }
 }
 
 
@@ -140,7 +136,7 @@ int main(){
                 }
 
                 case 2:{
-                    write_to_file(todo_things,filename);
+                    add_item(filename, todo_things);
                     break;
                 }
 
@@ -176,6 +172,7 @@ int main(){
     return 0;
 }
 
+//fix read to file function
 //format the time
 //remove words in console
 //removing lines
